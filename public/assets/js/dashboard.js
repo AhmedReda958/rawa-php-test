@@ -1,18 +1,4 @@
-'use strict';
-
-const loginForm = document.querySelector('#login-form');
-
-if (loginForm) {
-    // Keep native field validation available when JavaScript is disabled.
-    loginForm.noValidate = true;
-    loginForm.addEventListener('submit', (event) => {
-        loginForm.elements.email.value = loginForm.elements.email.value.trim();
-
-        if (!loginForm.reportValidity()) {
-            event.preventDefault();
-        }
-    });
-}
+import { compareTasks, matchesTask } from './task-utils.js';
 
 const taskDashboard = document.querySelector('#task-dashboard');
 
@@ -25,36 +11,19 @@ if (taskDashboard && document.querySelector('#task-list')) {
     const sort = document.querySelector('#task-sort');
     const results = document.querySelector('#task-results');
     const emptyState = document.querySelector('#task-empty');
-    const priorityRank = { high: 3, medium: 2, low: 1 };
     let activeStatus = 'all';
 
     function updateTasks() {
         const query = search.value.trim().toLowerCase();
-        const sorted = [...tasks].sort((first, second) => {
-            const a = first.dataset;
-            const b = second.dataset;
-            const newest = b.created.localeCompare(a.created) || Number(b.id) - Number(a.id);
-
-            switch (sort.value) {
-                case 'oldest':
-                    return -newest;
-                case 'due':
-                    // Undated tasks follow dated tasks, with newest first for equal dates.
-                    return (a.due || '9999-12-31').localeCompare(b.due || '9999-12-31') || newest;
-                case 'priority':
-                    return priorityRank[b.priority] - priorityRank[a.priority] || newest;
-                case 'title':
-                    return a.title.localeCompare(b.title, undefined, { sensitivity: 'base' }) || newest;
-                default:
-                    return newest;
-            }
-        });
+        const sorted = [...tasks].sort((a, b) => compareTasks(a.dataset, b.dataset, sort.value));
         let visible = 0;
 
         for (const task of sorted) {
-            const matches = task.dataset.title.toLowerCase().includes(query)
-                && (activeStatus === 'all' || task.dataset.status === activeStatus)
-                && (priorityFilter.value === 'all' || task.dataset.priority === priorityFilter.value);
+            const matches = matchesTask(task.dataset, {
+                query,
+                status: activeStatus,
+                priority: priorityFilter.value,
+            });
             task.hidden = !matches;
             visible += matches ? 1 : 0;
             // Move existing elements rather than rebuilding task content as HTML.

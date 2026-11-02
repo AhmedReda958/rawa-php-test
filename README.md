@@ -98,11 +98,25 @@ public/
   dashboard.php         Protected task statistics and task list
   logout.php            POST-only logout
   assets/
-    css/style.css       Styles
-    js/app.js           JavaScript entry point
+    css/
+      style.css         Loads the shared stylesheets
+      variables.css     Shared colors, spacing, fonts, and sizes
+      base.css          Element defaults and page layout
+      components.css    Forms, buttons, cards, badges, and messages
+      login.css         Login page layout
+      dashboard.css     Dashboard and task list layout
+    js/
+      login.js          Login form validation
+      dashboard.js      Dashboard controls and task list updates
+      task-utils.js     Task comparison and filter helpers
 database.sql            Table definitions and test user
 scripts/
   seed.php              Optional local sample tasks
 ```
 
 The `public` directory is the web root.
+
+Both pages load `style.css` and their own page stylesheet. Change shared design
+values in `variables.css`, reusable controls in `components.css`, and page layouts
+in their respective stylesheets. The dashboard uses native JavaScript modules;
+no build step or frontend dependencies are needed.

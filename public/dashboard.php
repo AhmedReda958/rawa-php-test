@@ -36,7 +36,8 @@ $filters = [
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard | Task Manager</title>
     <link rel="stylesheet" href="assets/css/style.css">
-    <script src="assets/js/app.js" defer></script>
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+    <script type="module" src="assets/js/dashboard.js"></script>
 </head>
 <body>
     <main class="dashboard-container" id="task-dashboard">

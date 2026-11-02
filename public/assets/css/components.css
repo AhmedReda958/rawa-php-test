@@ -1,0 +1,119 @@
+.card {
+    padding: var(--space-28);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+}
+
+.app-name {
+    margin-bottom: var(--space-16);
+    color: var(--color-text-muted);
+    font-weight: 700;
+}
+
+.intro {
+    margin-bottom: var(--space-24);
+    color: var(--color-text-muted);
+}
+
+.form-field {
+    margin-bottom: var(--space-20);
+}
+
+label {
+    display: block;
+    margin-bottom: var(--space-6);
+    font-weight: 700;
+}
+
+input,
+button {
+    min-height: var(--control-height);
+    font: inherit;
+    border-radius: var(--radius-sm);
+}
+
+input {
+    width: 100%;
+    padding: var(--space-10) var(--space-12);
+    border: 1px solid var(--color-input-border);
+}
+
+button {
+    padding: var(--space-10) var(--space-20);
+    border: 1px solid var(--color-primary);
+    background-color: var(--color-primary);
+    color: var(--color-surface);
+    font-weight: 700;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: var(--color-primary-hover);
+}
+
+input:focus-visible,
+button:focus-visible {
+    outline: var(--focus-ring);
+    outline-offset: 3px;
+}
+
+.button-secondary {
+    background-color: var(--color-surface);
+    color: var(--color-primary);
+}
+
+.button-secondary:hover {
+    background-color: var(--color-primary-soft);
+}
+
+.error {
+    padding: var(--space-12);
+    background-color: var(--color-danger-soft);
+    border: 1px solid var(--color-danger-border);
+    border-radius: var(--radius-sm);
+    color: var(--color-danger);
+    overflow-wrap: anywhere;
+}
+
+select {
+    width: 100%;
+    min-height: var(--control-height);
+    padding: var(--space-10);
+    border: 1px solid var(--color-input-border);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    font: inherit;
+    font-size: 0.875rem;
+}
+
+select:focus-visible {
+    outline: var(--focus-ring);
+    outline-offset: 3px;
+}
+
+.badge {
+    display: inline-block;
+    padding: var(--space-4) var(--space-8);
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.empty-state {
+    padding: var(--space-40) 0;
+    color: var(--color-text-muted);
+    text-align: center;
+}
+
+.empty-state p:last-child {
+    margin-bottom: 0;
+}
+
+@media (max-width: 480px) {
+    .card {
+        padding: var(--space-20);
+    }
+}
