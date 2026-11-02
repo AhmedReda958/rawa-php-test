@@ -21,4 +21,4 @@ CREATE TABLE tasks (
 
 -- Test user for local development: john@example.com / TaskDemo123!
 INSERT INTO users (name, email, password)
-VALUES ('John', 'john@example.com', '$2y$12$Yfm3TAacl5HOoPxSldq9uut4PqykX56SF6gcPF6i9ZAFP.Dfom45C');
+VALUES ('Ahmed', 'john@example.com', '$2y$12$Yfm3TAacl5HOoPxSldq9uut4PqykX56SF6gcPF6i9ZAFP.Dfom45C');

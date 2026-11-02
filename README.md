@@ -1,8 +1,14 @@
 # Task Manager
 
 A task management project built with plain PHP, HTML, CSS, and vanilla JavaScript.
-Currently, it includes login, session authentication, logout, a protected dashboard
-placeholder, and the database setup. Task management will be added next.
+Currently, it includes login, session authentication, logout, and a dashboard with
+task statistics and the logged-in user's task list. Adding, editing, and deleting
+tasks will be implemented next.
+
+The dashboard supports title search, status and priority filters, and sorting by
+creation date, due date, priority, or title. Search, filtering, and sorting use
+vanilla JavaScript and can be combined. Status counts always reflect all of the
+user's tasks; Reset clears the filters and restores newest-first sorting.
 
 ## Requirements
 
@@ -44,11 +50,27 @@ values are `low`, `medium`, and `high`; statuses are `pending`, `in_progress`, a
 
 ## Test login
 
+- Name: Ahmed
 - Email: `john@example.com`
 - Password: `TaskDemo123!`
 
 The test user's password is stored as a hash in the database. These credentials
 are for local development and reviewing the project.
+
+## Sample tasks
+
+After configuring the database, run:
+
+```sh
+php scripts/seed.php
+```
+
+This renames the test user to Ahmed and adds 10 everyday sample tasks: 4 Pending, 3 In
+Progress, and 3 Completed. The examples cover every status/priority combination,
+past, current, and future due dates, missing due dates, and empty or multiline
+descriptions. Re-running the command skips existing sample titles for this user
+and does not overwrite task records. Log out and back in after renaming the user
+to refresh the welcome message.
 
 ## Run locally
 
@@ -66,18 +88,21 @@ Open http://127.0.0.1:8000 in your browser. Press `Ctrl+C` to stop the server.
 app/
   auth.php              Session setup, authentication guard, and CSRF helpers
   database.php          Shared PDO connection
+  tasks.php             Queries scoped to the authenticated user
 config/
   database.example.php  Example database settings
   database.php          Private local settings (ignored by Git)
 public/
   index.php             Redirects to login or dashboard
   login.php             Login form and credential verification
-  dashboard.php         Protected dashboard placeholder
+  dashboard.php         Protected task statistics and task list
   logout.php            POST-only logout
   assets/
     css/style.css       Styles
     js/app.js           JavaScript entry point
 database.sql            Table definitions and test user
+scripts/
+  seed.php              Optional local sample tasks
 ```
 
 The `public` directory is the web root.
