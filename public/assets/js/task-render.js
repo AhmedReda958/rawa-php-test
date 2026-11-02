@@ -11,13 +11,15 @@ function element(tag, className, text) {
 export function createTaskElement(task) {
     const item = element('li', `task-item status-${task.status}`);
     Object.assign(item.dataset, {
-        id: task.id, title: task.title, status: task.status, priority: task.priority,
+        id: task.id, title: task.title, description: task.description, status: task.status, priority: task.priority,
         due: task.due_date || '', created: task.created_at,
     });
 
     // Treat user content as text, including titles that contain HTML characters.
     const content = element('div', 'task-content');
-    content.append(element('h3', 'task-title', task.title));
+    const heading = element('div', 'task-heading');
+    heading.append(element('h3', 'task-title', task.title));
+    content.append(heading);
     content.append(element('p', 'task-description', task.description || 'No description'));
     const meta = element('div', 'task-meta');
     meta.append(element('span', `badge priority-${task.priority}`, `${priorityLabels[task.priority]} priority`));
@@ -36,6 +38,28 @@ export function createTaskElement(task) {
 
     meta.append(due);
     content.append(meta);
-    item.append(content, element('span', 'badge task-status', statusLabels[task.status]));
+    const actions = element('div', 'task-actions');
+    const edit = element('button', 'edit-task');
+    edit.type = 'button';
+    edit.setAttribute('aria-label', `Edit ${task.title}`);
+    edit.title = 'Edit task';
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', '0 0 24 24');
+    svg.setAttribute('aria-hidden', 'true');
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', 'm15 5 4 4M4 20l4-1 12-12a2.8 2.8 0 0 0-4-4L4 15z');
+    svg.append(path);
+    edit.append(svg);
+    heading.append(edit);
+    actions.append(element('span', 'badge task-status', statusLabels[task.status]));
+
+    const nextStatus = { pending: 'in_progress', in_progress: 'completed' }[task.status];
+    if (nextStatus) {
+        const change = element('button', 'button-secondary change-status', `Mark as ${statusLabels[nextStatus]}`);
+        change.type = 'button';
+        change.dataset.status = nextStatus;
+        actions.append(change);
+    }
+    item.append(content, actions);
     return item;
 }

@@ -67,6 +67,7 @@ $filters = [
                     </div>
                     <form id="task-form" action="api/tasks.php" method="post">
                         <input type="hidden" name="csrf_token" value="<?= escape(csrfToken()) ?>">
+                        <input type="hidden" name="task_id" value="">
                         <p class="error" id="task-form-error" role="alert" hidden></p>
 
                         <div class="form-field">
@@ -152,9 +153,14 @@ $filters = [
 
                 <ul class="task-list" id="task-list">
                     <?php foreach ($tasks as $task): ?>
-                        <li class="task-item status-<?= escape($task['status']) ?>" data-title="<?= escape($task['title']) ?>" data-status="<?= escape($task['status']) ?>" data-priority="<?= escape($task['priority']) ?>" data-due="<?= escape($task['due_date'] ?? '') ?>" data-created="<?= escape($task['created_at']) ?>" data-id="<?= (int) $task['id'] ?>">
+                        <li class="task-item status-<?= escape($task['status']) ?>" data-title="<?= escape($task['title']) ?>" data-description="<?= escape($task['description']) ?>" data-status="<?= escape($task['status']) ?>" data-priority="<?= escape($task['priority']) ?>" data-due="<?= escape($task['due_date'] ?? '') ?>" data-created="<?= escape($task['created_at']) ?>" data-id="<?= (int) $task['id'] ?>">
                             <div class="task-content">
-                                <h3 class="task-title"><?= escape($task['title']) ?></h3>
+                                <div class="task-heading">
+                                    <h3 class="task-title"><?= escape($task['title']) ?></h3>
+                                    <button type="button" class="edit-task" aria-label="Edit <?= escape($task['title']) ?>" title="Edit task" hidden>
+                                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5 4 4M4 20l4-1 12-12a2.8 2.8 0 0 0-4-4L4 15z"/></svg>
+                                    </button>
+                                </div>
                                 <p class="task-description"><?= $task['description'] !== '' ? escape($task['description']) : 'No description' ?></p>
                                 <div class="task-meta">
                                     <span class="badge priority-<?= escape($task['priority']) ?>"><?= escape(ucfirst($task['priority'])) ?> priority</span>
@@ -167,9 +173,13 @@ $filters = [
                                     </span>
                                 </div>
                             </div>
-                            <span class="badge task-status">
-                                <?= escape($statusLabels[$task['status']]) ?>
-                            </span>
+                            <div class="task-actions">
+                                <span class="badge task-status"><?= escape($statusLabels[$task['status']]) ?></span>
+                                <?php if ($task['status'] !== 'completed'): ?>
+                                    <?php $nextStatus = $task['status'] === 'pending' ? 'in_progress' : 'completed'; ?>
+                                    <button type="button" class="button-secondary change-status" data-status="<?= escape($nextStatus) ?>" hidden>Mark as <?= escape($statusLabels[$nextStatus]) ?></button>
+                                <?php endif; ?>
+                            </div>
                         </li>
                     <?php endforeach; ?>
                 </ul>

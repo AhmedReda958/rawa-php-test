@@ -1,6 +1,7 @@
 import { compareTasks, matchesTask } from './task-utils.js';
 import { initTaskForm } from './task-form.js';
 import { createTaskElement } from './task-render.js';
+import { initTaskStatus } from './task-status.js';
 
 const taskDashboard = document.querySelector('#task-dashboard');
 
@@ -68,11 +69,46 @@ if (taskDashboard && document.querySelector('#task-list')) {
 
     document.querySelector('.task-stats').hidden = false;
     document.querySelector('.task-toolbar').hidden = false;
-    initTaskForm(document.querySelector('#task-form'), (task) => {
+    function saveTask(task, focusSelector = '.edit-task') {
         const item = createTaskElement(task);
-        tasks.push(item);
+        const index = tasks.findIndex(existing => existing.dataset.id === String(task.id));
+
+        if (index === -1) {
+            tasks.push(item);
+        } else {
+            tasks[index].replaceWith(item);
+            tasks[index] = item;
+        }
+
         updateTasks();
+
+        if (index !== -1 && !document.querySelector('#task-dialog').open) {
+            const focusTarget = item.hidden
+                ? document.querySelector('#open-task-form')
+                : item.querySelector(focusSelector) || item.querySelector('.edit-task');
+            focusTarget.focus();
+        }
+
         return !item.hidden;
+    }
+
+    const taskForm = initTaskForm(document.querySelector('#task-form'), saveTask);
+    initTaskStatus(taskList, task => saveTask(task, '.change-status'));
+
+    taskList.addEventListener('click', (event) => {
+        const edit = event.target.closest('.edit-task');
+        if (!edit) return;
+
+        const task = edit.closest('.task-item').dataset;
+        taskForm.edit({
+            id: task.id, title: task.title, description: task.description,
+            priority: task.priority, status: task.status, due_date: task.due,
+        });
     });
+
+    for (const button of taskList.querySelectorAll('.edit-task')) {
+        button.hidden = false;
+    }
+
     updateTasks();
 }

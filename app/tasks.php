@@ -38,3 +38,38 @@ function createTask(int $userId, array $values): array
 
     return $query->fetch();
 }
+
+function updateTask(int $userId, int $taskId, array $values): ?array
+{
+    $database = getDatabase();
+    $query = $database->prepare(
+        'UPDATE tasks SET title = ?, description = ?, priority = ?, status = ?, due_date = ?
+         WHERE id = ? AND user_id = ?'
+    );
+    $query->execute([
+        $values['title'], $values['description'], $values['priority'],
+        $values['status'], $values['due_date'], $taskId, $userId,
+    ]);
+
+    // A zero row count also occurs when the submitted values are unchanged.
+    return getUserTask($userId, $taskId);
+}
+
+function updateTaskStatus(int $userId, int $taskId, string $status): ?array
+{
+    $query = getDatabase()->prepare('UPDATE tasks SET status = ? WHERE id = ? AND user_id = ?');
+    $query->execute([$status, $taskId, $userId]);
+
+    return getUserTask($userId, $taskId);
+}
+
+function getUserTask(int $userId, int $taskId): ?array
+{
+    $query = getDatabase()->prepare(
+        'SELECT id, title, description, priority, status, due_date, created_at
+         FROM tasks WHERE id = ? AND user_id = ?'
+    );
+    $query->execute([$taskId, $userId]);
+
+    return $query->fetch() ?: null;
+}

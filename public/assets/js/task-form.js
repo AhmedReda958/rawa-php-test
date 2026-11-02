@@ -1,22 +1,35 @@
 import { validateTaskInput } from './task-validation.js';
+import { hideTaskNotice, showTaskNotice } from './task-notice.js';
 
-export function initTaskForm(form, onCreated) {
+export function initTaskForm(form, onSaved) {
     const submit = form.querySelector('button[type="submit"]');
     const formError = form.querySelector('#task-form-error');
-    const notice = document.querySelector('#task-notice');
     const dialog = document.querySelector('#task-dialog');
     const open = document.querySelector('#open-task-form');
     const close = document.querySelector('#close-task-form');
+    const heading = document.querySelector('#task-form-heading');
     const fields = ['title', 'description', 'priority', 'status', 'due_date'];
     let saving = false;
-    let noticeTimer;
     form.noValidate = true;
 
-    open.addEventListener('click', () => {
+    function openForm(task = null) {
+        form.reset();
+        form.elements.task_id.value = task ? task.id : '';
+        heading.textContent = task ? 'Edit task' : 'Add a task';
+        submit.textContent = task ? 'Save changes' : 'Save task';
+
+        if (task) {
+            for (const name of fields) {
+                form.elements[name].value = task[name] ?? '';
+            }
+        }
+
         showErrors({});
         formError.hidden = true;
         dialog.showModal();
-    });
+    }
+
+    open.addEventListener('click', () => openForm());
     close.addEventListener('click', () => dialog.close());
     dialog.addEventListener('cancel', (event) => {
         if (saving) event.preventDefault();
@@ -37,8 +50,7 @@ export function initTaskForm(form, onCreated) {
         if (saving) return;
 
         formError.hidden = true;
-        notice.hidden = true;
-        clearTimeout(noticeTimer);
+        hideTaskNotice();
         const data = new FormData(form);
         const errors = validateTaskInput(Object.fromEntries(data));
         if (form.elements.due_date.validity.badInput) {
@@ -48,6 +60,7 @@ export function initTaskForm(form, onCreated) {
         if (Object.keys(errors).length) return;
 
         saving = true;
+        const editing = form.elements.task_id.value !== '';
         submit.disabled = true;
         close.disabled = true;
         submit.textContent = 'Saving…';
@@ -66,12 +79,11 @@ export function initTaskForm(form, onCreated) {
                 return;
             }
 
-            const visible = onCreated(result.task);
-            form.reset();
             dialog.close();
-            notice.textContent = visible ? 'Task added.' : 'Task added. Change your filters to see it.';
-            notice.hidden = false;
-            noticeTimer = setTimeout(() => { notice.hidden = true; }, 5000);
+            const visible = onSaved(result.task);
+            form.reset();
+            const message = editing ? 'Task updated.' : 'Task added.';
+            showTaskNotice(visible ? message : `${message} Change your filters to see it.`);
         } catch {
             formError.textContent = 'Unable to confirm the save. Check your connection and refresh the list before retrying.';
             formError.hidden = false;
@@ -79,9 +91,10 @@ export function initTaskForm(form, onCreated) {
             saving = false;
             submit.disabled = false;
             close.disabled = false;
-            submit.textContent = 'Save task';
+            submit.textContent = editing ? 'Save changes' : 'Save task';
         }
     });
 
     open.hidden = false;
+    return { edit: (task) => openForm(task) };
 }

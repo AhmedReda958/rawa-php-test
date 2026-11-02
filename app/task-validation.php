@@ -2,6 +2,11 @@
 
 declare(strict_types=1);
 
+function isValidTaskStatus(mixed $status): bool
+{
+    return is_string($status) && in_array($status, ['pending', 'in_progress', 'completed'], true);
+}
+
 function validateTask(array $input): array
 {
     $values = [];
@@ -31,7 +36,7 @@ function validateTask(array $input): array
         $errors['priority'] = 'Choose a valid priority.';
     }
 
-    if (!in_array($values['status'], ['pending', 'in_progress', 'completed'], true)) {
+    if (!isValidTaskStatus($values['status'])) {
         $errors['status'] = 'Choose a valid status.';
     }
 
