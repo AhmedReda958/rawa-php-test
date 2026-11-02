@@ -73,8 +73,9 @@ Set the database password in `config/database.php` to match the password you cho
 This file is ignored by Git and sits outside the web root. The application account
 can read and change records only in this database; it cannot create or drop tables.
 
-Import `database.sql` once into an empty database. It creates the tables and a test
-user, since the app does not include signup. Task due dates are optional. Stored priority
+Import `database.sql` once into an empty database. It creates only the tables.
+Run `php scripts/seed.php` after configuring the database to create the test user
+and sample tasks, since the app does not include signup. Task due dates are optional. Stored priority
 values are `low`, `medium`, and `high`; statuses are `pending`, `in_progress`, and
 `completed`.
 
@@ -95,12 +96,12 @@ After configuring the database, run:
 php scripts/seed.php
 ```
 
-This renames the test user to Ahmed and adds 10 everyday sample tasks: 4 Pending, 3 In
+This creates the test user Ahmed if the email is not already registered and adds
+10 everyday sample tasks: 4 Pending, 3 In
 Progress, and 3 Completed. The examples cover every status/priority combination,
 past, current, and future due dates, missing due dates, and empty or multiline
 descriptions. Re-running the command skips existing sample titles for this user
-and does not overwrite task records. Log out and back in after renaming the user
-to refresh the welcome message.
+and does not overwrite task records or an existing user's name and password.
 
 ## Run locally
 
@@ -150,9 +151,9 @@ public/
       task-notice.js    Shared timed notifications
       task-render.js    Safe task card creation
       task-validation.js Client-side task validation
-database.sql            Table definitions and test user
+database.sql            Table definitions only
 scripts/
-  seed.php              Optional local sample tasks
+  seed.php              Test user and sample tasks
 ```
 
 The `public` directory is the web root.

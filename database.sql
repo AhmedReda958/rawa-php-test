@@ -18,7 +18,3 @@ CREATE TABLE tasks (
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT fk_tasks_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- Test user for local development: john@example.com / TaskDemo123!
-INSERT INTO users (name, email, password)
-VALUES ('Ahmed', 'john@example.com', '$2y$12$Yfm3TAacl5HOoPxSldq9uut4PqykX56SF6gcPF6i9ZAFP.Dfom45C');

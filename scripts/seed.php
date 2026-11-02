@@ -32,11 +32,10 @@ try {
     $userId = $userQuery->fetchColumn();
 
     if ($userId === false) {
-        throw new RuntimeException('Test user not found. Import database.sql first.');
+        $createUser = $database->prepare('INSERT INTO users (name, email, password) VALUES (?, ?, ?)');
+        $createUser->execute(['Ahmed', 'john@example.com', password_hash('TaskDemo123!', PASSWORD_DEFAULT)]);
+        $userId = (int) $database->lastInsertId();
     }
-
-    $rename = $database->prepare('UPDATE users SET name = ? WHERE id = ?');
-    $rename->execute(['Ahmed', $userId]);
 
     // Re-running the seed leaves existing tasks and any edits intact.
     $exists = $database->prepare('SELECT id FROM tasks WHERE user_id = ? AND title = ?');
