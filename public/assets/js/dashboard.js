@@ -1,4 +1,6 @@
 import { compareTasks, matchesTask } from './task-utils.js';
+import { initTaskForm } from './task-form.js';
+import { createTaskElement } from './task-render.js';
 
 const taskDashboard = document.querySelector('#task-dashboard');
 
@@ -39,6 +41,10 @@ if (taskDashboard && document.querySelector('#task-list')) {
 
         for (const button of statusButtons) {
             button.setAttribute('aria-pressed', String(button.dataset.status === activeStatus));
+            const count = button.dataset.status === 'all'
+                ? tasks.length
+                : tasks.filter(task => task.dataset.status === button.dataset.status).length;
+            button.textContent = `${button.dataset.label} (${count})`;
         }
     }
 
@@ -62,5 +68,11 @@ if (taskDashboard && document.querySelector('#task-list')) {
 
     document.querySelector('.task-stats').hidden = false;
     document.querySelector('.task-toolbar').hidden = false;
+    initTaskForm(document.querySelector('#task-form'), (task) => {
+        const item = createTaskElement(task);
+        tasks.push(item);
+        updateTasks();
+        return !item.hidden;
+    });
     updateTasks();
 }

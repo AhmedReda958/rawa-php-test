@@ -17,3 +17,24 @@ function getUserTasks(int $userId): array
 
     return $query->fetchAll();
 }
+
+function createTask(int $userId, array $values): array
+{
+    $database = getDatabase();
+    $query = $database->prepare(
+        'INSERT INTO tasks (user_id, title, description, priority, status, due_date)
+         VALUES (?, ?, ?, ?, ?, ?)'
+    );
+    $query->execute([
+        $userId, $values['title'], $values['description'],
+        $values['priority'], $values['status'], $values['due_date'],
+    ]);
+
+    $query = $database->prepare(
+        'SELECT id, title, description, priority, status, due_date, created_at
+         FROM tasks WHERE id = ? AND user_id = ?'
+    );
+    $query->execute([$database->lastInsertId(), $userId]);
+
+    return $query->fetch();
+}

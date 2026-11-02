@@ -37,6 +37,7 @@ $filters = [
     <title>Dashboard | Task Manager</title>
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/dashboard.css">
+    <link rel="stylesheet" href="assets/css/task-form.css">
     <script type="module" src="assets/js/dashboard.js"></script>
 </head>
 <body>
@@ -55,11 +56,65 @@ $filters = [
             <p class="error" role="alert"><?= escape($error) ?></p>
         <?php else: ?>
             <section class="card" aria-labelledby="tasks-heading">
-                <h2 id="tasks-heading">Your tasks</h2>
+                <div class="task-section-header">
+                    <h2 id="tasks-heading">Your tasks</h2>
+                    <button type="button" id="open-task-form" hidden>Add a task</button>
+                </div>
+
+                <dialog class="task-dialog" id="task-dialog" aria-labelledby="task-form-heading">
+                    <div class="task-dialog-header">
+                        <h2 id="task-form-heading">Add a task</h2>
+                    </div>
+                    <form id="task-form" action="api/tasks.php" method="post">
+                        <input type="hidden" name="csrf_token" value="<?= escape(csrfToken()) ?>">
+                        <p class="error" id="task-form-error" role="alert" hidden></p>
+
+                        <div class="form-field">
+                            <label for="task-title">Title</label>
+                            <input id="task-title" name="title" required maxlength="255" aria-describedby="title-error" autofocus>
+                            <small class="field-error" id="title-error"></small>
+                        </div>
+                        <div class="form-field">
+                            <label for="task-description">Description (optional)</label>
+                            <textarea id="task-description" name="description" rows="3" maxlength="5000" aria-describedby="description-error"></textarea>
+                            <small class="field-error" id="description-error"></small>
+                        </div>
+                        <div class="task-form-options">
+                            <div class="form-field">
+                                <label for="task-priority">Priority</label>
+                                <select id="task-priority" name="priority" required aria-describedby="priority-error">
+                                    <option value="low">Low</option>
+                                    <option value="medium" selected>Medium</option>
+                                    <option value="high">High</option>
+                                </select>
+                                <small class="field-error" id="priority-error"></small>
+                            </div>
+                            <div class="form-field">
+                                <label for="task-status">Status</label>
+                                <select id="task-status" name="status" required aria-describedby="status-error">
+                                    <option value="pending">Pending</option>
+                                    <option value="in_progress">In Progress</option>
+                                    <option value="completed">Completed</option>
+                                </select>
+                                <small class="field-error" id="status-error"></small>
+                            </div>
+                            <div class="form-field">
+                                <label for="task-due-date">Due date (optional)</label>
+                                <input type="date" id="task-due-date" name="due_date" min="1000-01-01" max="9999-12-31" aria-describedby="due_date-error">
+                                <small class="field-error" id="due_date-error"></small>
+                            </div>
+                        </div>
+                        <div class="task-form-actions">
+                            <button type="submit">Save task</button>
+                            <button type="button" class="button-secondary" id="close-task-form">Cancel</button>
+                        </div>
+                    </form>
+                </dialog>
+                <p class="success" id="task-notice" role="status" hidden></p>
 
                 <div class="task-stats" role="group" aria-label="Filter tasks by status" hidden>
                     <?php foreach ($filters as $status => $filter): ?>
-                        <button type="button" class="status-filter status-<?= escape($status) ?>" data-status="<?= escape($status) ?>" aria-pressed="<?= $status === 'all' ? 'true' : 'false' ?>">
+                        <button type="button" class="status-filter status-<?= escape($status) ?>" data-status="<?= escape($status) ?>" data-label="<?= escape($filter['label']) ?>" aria-pressed="<?= $status === 'all' ? 'true' : 'false' ?>">
                             <?= escape($filter['label']) ?> (<?= $filter['count'] ?>)
                         </button>
                     <?php endforeach; ?>
@@ -93,7 +148,7 @@ $filters = [
                 </div>
 
                 <p id="task-results" class="task-results" role="status" aria-live="polite"><?= count($tasks) ?> tasks</p>
-                <noscript><p>Enable JavaScript to search, filter, and sort. All your tasks are listed below.</p></noscript>
+                <noscript><p>Enable JavaScript to add, search, filter, and sort tasks. Your existing tasks are listed below.</p></noscript>
 
                 <ul class="task-list" id="task-list">
                     <?php foreach ($tasks as $task): ?>

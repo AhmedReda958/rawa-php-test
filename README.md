@@ -2,18 +2,29 @@
 
 A task management project built with plain PHP, HTML, CSS, and vanilla JavaScript.
 Currently, it includes login, session authentication, logout, and a dashboard with
-task statistics and the logged-in user's task list. Adding, editing, and deleting
-tasks will be implemented next.
+task statistics and the logged-in user's task list. Tasks can be added without
+reloading the page. Editing and deleting tasks will be implemented next.
 
 The dashboard supports title search, status and priority filters, and sorting by
 creation date, due date, priority, or title. Search, filtering, and sorting use
 vanilla JavaScript and can be combined. Status counts always reflect all of the
 user's tasks; Reset clears the filters and restores newest-first sorting.
 
+## Adding a task
+
+Click **Add a task** on the dashboard to open the modal. A title (up to 255 characters), priority,
+and status are required. Description (up to 5,000 characters) and due date are
+optional. Dates must be real calendar dates in years 1000–9999; past dates are
+allowed. JavaScript and PHP both validate input. The form posts to
+`public/api/tasks.php` with `fetch()`, and the list and counts update in place.
+Current filters stay active, so a newly added task may be hidden by them.
+After saving, the modal closes and a success message appears for five seconds.
+
 ## Requirements
 
 - PHP 8.2 or newer
 - PHP's PDO MySQL extension (`pdo_mysql`)
+- PHP's multibyte string extension (`mbstring`)
 - MySQL 8.0 or newer
 
 ## Database setup
@@ -88,6 +99,8 @@ Open http://127.0.0.1:8000 in your browser. Press `Ctrl+C` to stop the server.
 app/
   auth.php              Session setup, authentication guard, and CSRF helpers
   database.php          Shared PDO connection
+  http.php              JSON response helper
+  task-validation.php   Server-side task validation
   tasks.php             Queries scoped to the authenticated user
 config/
   database.example.php  Example database settings
@@ -97,6 +110,7 @@ public/
   login.php             Login form and credential verification
   dashboard.php         Protected task statistics and task list
   logout.php            POST-only logout
+  api/tasks.php         Authenticated task creation endpoint
   assets/
     css/
       style.css         Loads the shared stylesheets
@@ -105,10 +119,14 @@ public/
       components.css    Forms, buttons, cards, badges, and messages
       login.css         Login page layout
       dashboard.css     Dashboard and task list layout
+      task-form.css     Task creation form layout
     js/
       login.js          Login form validation
       dashboard.js      Dashboard controls and task list updates
       task-utils.js     Task comparison and filter helpers
+      task-form.js      Form submission with fetch and field errors
+      task-render.js    Safe task card creation
+      task-validation.js Client-side task validation
 database.sql            Table definitions and test user
 scripts/
   seed.php              Optional local sample tasks

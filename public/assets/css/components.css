@@ -33,7 +33,8 @@ button {
     border-radius: var(--radius-sm);
 }
 
-input {
+input,
+textarea {
     width: 100%;
     padding: var(--space-10) var(--space-12);
     border: 1px solid var(--color-input-border);
@@ -53,7 +54,8 @@ button:hover {
 }
 
 input:focus-visible,
-button:focus-visible {
+button:focus-visible,
+textarea:focus-visible {
     outline: var(--focus-ring);
     outline-offset: 3px;
 }
@@ -110,6 +112,35 @@ select:focus-visible {
 
 .empty-state p:last-child {
     margin-bottom: 0;
+}
+
+textarea {
+    display: block;
+    resize: vertical;
+    font: inherit;
+    border-radius: var(--radius-sm);
+}
+
+.field-error {
+    display: block;
+    margin-top: var(--space-4);
+    color: var(--color-danger);
+}
+
+[aria-invalid="true"] {
+    border-color: var(--color-danger);
+}
+
+button:disabled {
+    opacity: 0.65;
+    cursor: wait;
+}
+
+.success {
+    padding: var(--space-12);
+    color: var(--color-success);
+    background-color: var(--color-success-soft);
+    border-radius: var(--radius-sm);
 }
 
 @media (max-width: 480px) {

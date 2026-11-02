@@ -1,0 +1,46 @@
+.task-section-header,
+.task-dialog-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-16);
+    margin-bottom: var(--space-20);
+}
+
+.task-section-header h2,
+.task-dialog-header h2 {
+    margin-bottom: 0;
+}
+
+.task-dialog {
+    width: min(640px, calc(100% - 32px));
+    max-height: 90vh;
+    padding: var(--space-24);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    overflow-y: auto;
+}
+
+.task-dialog::backdrop {
+    background-color: var(--color-overlay);
+}
+
+.task-form-options {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-16);
+}
+
+.task-form-actions {
+    display: flex;
+    gap: var(--space-12);
+}
+
+@media (max-width: 600px) {
+    .task-form-options {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+}
