@@ -1,8 +1,8 @@
 # Task Manager
 
 A task management project built with plain PHP, HTML, CSS, and vanilla JavaScript.
-Currently, it contains the initial page, database schema, and shared database connection.
-Login and task management will be added next.
+Currently, it includes login, session authentication, logout, a protected dashboard
+placeholder, and the database setup. Task management will be added next.
 
 ## Requirements
 
@@ -37,10 +37,18 @@ Set the database password in `config/database.php` to match the password you cho
 This file is ignored by Git and sits outside the web root. The application account
 can read and change records only in this database; it cannot create or drop tables.
 
-Import `database.sql` once into an empty database. It creates only the tables.
-Development users are created separately through the terminal. Task due dates are optional. Stored priority
+Import `database.sql` once into an empty database. It creates the tables and a test
+user, since the app does not include signup. Task due dates are optional. Stored priority
 values are `low`, `medium`, and `high`; statuses are `pending`, `in_progress`, and
 `completed`.
+
+## Test login
+
+- Email: `john@example.com`
+- Password: `TaskDemo123!`
+
+The test user's password is stored as a hash in the database. These credentials
+are for local development and reviewing the project.
 
 ## Run locally
 
@@ -56,16 +64,20 @@ Open http://127.0.0.1:8000 in your browser. Press `Ctrl+C` to stop the server.
 
 ```text
 app/
+  auth.php              Session setup, authentication guard, and CSRF helpers
   database.php          Shared PDO connection
 config/
   database.example.php  Example database settings
   database.php          Private local settings (ignored by Git)
 public/
-  index.php             Entry page
+  index.php             Redirects to login or dashboard
+  login.php             Login form and credential verification
+  dashboard.php         Protected dashboard placeholder
+  logout.php            POST-only logout
   assets/
     css/style.css       Styles
     js/app.js           JavaScript entry point
-database.sql            Table definitions
+database.sql            Table definitions and test user
 ```
 
 The `public` directory is the web root.

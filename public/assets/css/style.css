@@ -15,3 +15,129 @@ main {
     margin: 0 auto;
     padding: 48px 24px;
 }
+
+h1,
+h2,
+p {
+    margin-top: 0;
+}
+
+h1 {
+    margin-bottom: 8px;
+    font-size: 1.75rem;
+}
+
+h2 {
+    font-size: 1.25rem;
+}
+
+.login-container {
+    max-width: 440px;
+    padding-top: 80px;
+}
+
+.card {
+    padding: 28px;
+    background-color: #fff;
+    border: 1px solid #dfe3e8;
+    border-radius: 8px;
+}
+
+.app-name {
+    margin-bottom: 16px;
+    color: #4d596b;
+    font-weight: 700;
+}
+
+.intro {
+    margin-bottom: 24px;
+    color: #4d596b;
+}
+
+.form-field {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 700;
+}
+
+input,
+button {
+    min-height: 44px;
+    font: inherit;
+    border-radius: 4px;
+}
+
+input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #8792a2;
+}
+
+button {
+    padding: 10px 20px;
+    border: 1px solid #2458ba;
+    background-color: #2458ba;
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #1c4593;
+}
+
+input:focus-visible,
+button:focus-visible {
+    outline: 3px solid #7098e0;
+    outline-offset: 3px;
+}
+
+#login-form button {
+    width: 100%;
+}
+
+.button-secondary {
+    background-color: #fff;
+    color: #2458ba;
+}
+
+.button-secondary:hover {
+    background-color: #edf2fc;
+}
+
+.error {
+    padding: 12px;
+    background-color: #fff0f0;
+    border: 1px solid #e5b3b3;
+    border-radius: 4px;
+    color: #922323;
+    overflow-wrap: anywhere;
+}
+
+.dashboard-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 28px;
+}
+
+.dashboard-header h1 {
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 480px) {
+    main,
+    .login-container {
+        padding: 32px 16px;
+    }
+
+    .card {
+        padding: 20px;
+    }
+}
