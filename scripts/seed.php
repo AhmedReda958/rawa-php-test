@@ -28,12 +28,12 @@ $database->beginTransaction();
 
 try {
     $userQuery = $database->prepare('SELECT id FROM users WHERE email = ? FOR UPDATE');
-    $userQuery->execute(['john@example.com']);
+    $userQuery->execute(['ahmed@example.com']);
     $userId = $userQuery->fetchColumn();
 
     if ($userId === false) {
         $createUser = $database->prepare('INSERT INTO users (name, email, password) VALUES (?, ?, ?)');
-        $createUser->execute(['Ahmed', 'john@example.com', password_hash('TaskDemo123!', PASSWORD_DEFAULT)]);
+        $createUser->execute(['Ahmed', 'ahmed@example.com', password_hash('TaskDemo123!', PASSWORD_DEFAULT)]);
         $userId = (int) $database->lastInsertId();
     }
 

@@ -61,7 +61,7 @@ Local database credentials are ignored by Git.
 ## Test login
 
 - Name: Ahmed
-- Email: `john@example.com`
+- Email: `ahmed@example.com`
 - Password: `TaskDemo123!`
 
 These credentials are for local testing and reviewing the project.
