@@ -111,6 +111,17 @@ $filters = [
                         </div>
                     </form>
                 </dialog>
+                <dialog class="task-dialog delete-dialog" id="delete-task-dialog" aria-labelledby="delete-task-heading" aria-describedby="delete-task-description">
+                    <h2 id="delete-task-heading">Delete task?</h2>
+                    <p id="delete-task-description">Delete <strong id="delete-task-title"></strong>? This cannot be undone.</p>
+                    <p class="error" id="delete-task-error" role="alert" hidden></p>
+                    <form id="delete-task-form" action="api/tasks.php" method="post">
+                        <div class="task-form-actions">
+                            <button type="submit" class="button-danger" id="confirm-delete-task">Delete</button>
+                            <button type="button" class="button-secondary" id="cancel-delete-task" autofocus>Cancel</button>
+                        </div>
+                    </form>
+                </dialog>
                 <p class="success" id="task-notice" role="status" hidden></p>
 
                 <div class="task-stats" role="group" aria-label="Filter tasks by status" hidden>
@@ -157,9 +168,13 @@ $filters = [
                             <div class="task-content">
                                 <div class="task-heading">
                                     <h3 class="task-title"><?= escape($task['title']) ?></h3>
-                                    <button type="button" class="edit-task" aria-label="Edit <?= escape($task['title']) ?>" title="Edit task" hidden>
-                                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5 4 4M4 20l4-1 12-12a2.8 2.8 0 0 0-4-4L4 15z"/></svg>
-                                    </button>
+                                    <details class="task-menu" hidden>
+                                        <summary class="task-menu-toggle" aria-label="Actions for <?= escape($task['title']) ?>" title="Task actions">⋯</summary>
+                                        <div class="task-menu-options" role="group" aria-label="Task actions">
+                                            <button type="button" class="edit-task">Edit</button>
+                                            <button type="button" class="delete-task">Delete</button>
+                                        </div>
+                                    </details>
                                 </div>
                                 <p class="task-description"><?= $task['description'] !== '' ? escape($task['description']) : 'No description' ?></p>
                                 <div class="task-meta">

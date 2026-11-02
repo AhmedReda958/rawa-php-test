@@ -69,6 +69,15 @@ textarea:focus-visible {
     background-color: var(--color-primary-soft);
 }
 
+.button-danger {
+    border-color: var(--color-danger);
+    background-color: var(--color-danger);
+}
+
+.button-danger:hover {
+    background-color: var(--color-danger-hover);
+}
+
 .error {
     padding: var(--space-12);
     background-color: var(--color-danger-soft);

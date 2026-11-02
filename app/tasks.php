@@ -73,3 +73,11 @@ function getUserTask(int $userId, int $taskId): ?array
 
     return $query->fetch() ?: null;
 }
+
+function deleteTask(int $userId, int $taskId): bool
+{
+    $query = getDatabase()->prepare('DELETE FROM tasks WHERE id = ? AND user_id = ?');
+    $query->execute([$taskId, $userId]);
+
+    return $query->rowCount() === 1;
+}

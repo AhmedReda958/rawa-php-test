@@ -3,8 +3,8 @@
 A task management project built with plain PHP, HTML, CSS, and vanilla JavaScript.
 Currently, it includes login, session authentication, logout, and a dashboard with
 task statistics and the logged-in user's task list. Tasks can be added without
-reloading the page. Existing tasks can be edited in the same modal. Deleting tasks
-will be implemented next.
+reloading the page. Existing tasks can be edited in the same modal or deleted
+after confirmation.
 
 The dashboard supports title search, status and priority filters, and sorting by
 creation date, due date, priority, or title. Search, filtering, and sorting use
@@ -21,16 +21,23 @@ allowed. JavaScript and PHP both validate input. The form posts to
 Current filters stay active, so a newly added task may be hidden by them.
 After saving, the modal closes and a success message appears for five seconds.
 
-Click **Edit** on a task to load its current values into the modal. Saving updates
+Open the **⋯** action menu in a task card's top-right corner and choose **Edit** to load its current values into the modal. Saving updates
 the task, counts, and active filters without reloading. Cancel leaves the task
 unchanged. Both creating and editing validate input on the server and use the
 logged-in user's ID for ownership. Requests for unavailable or other users' tasks
 receive the same 404 response.
 
-The pencil icon beside a task's title opens Edit. A Pending task has a **Mark as
+A Pending task has a **Mark as
 In Progress** action; an In Progress task has **Mark as Completed**. Completed
 tasks have no forward action. Use Edit to choose any other status. Quick updates
 save only the status, update counts and colors, and keep current filters active.
+
+Choose **Delete** from the action menu to open a confirmation modal. Cancel
+keeps the task; confirming removes it and updates the list and counts without a
+reload. The modal initially focuses Cancel, and errors appear inside it. Delete
+requests require a valid session, CSRF token, and task ownership.
+The action menu also supports keyboard navigation, Escape, and closing on outside
+clicks. Success messages disappear after five seconds; errors keep the task visible.
 
 ## Requirements
 
@@ -122,7 +129,7 @@ public/
   login.php             Login form and credential verification
   dashboard.php         Protected task statistics and task list
   logout.php            POST-only logout
-  api/tasks.php         Authenticated task creation and editing endpoint
+  api/tasks.php         Authenticated task creation, editing, status, and deletion
   assets/
     css/
       style.css         Loads the shared stylesheets
@@ -138,6 +145,8 @@ public/
       task-utils.js     Task comparison and filter helpers
       task-form.js      Form submission with fetch and field errors
       task-status.js    Direct task status updates
+      task-menu.js      Compact Edit/Delete action menu
+      task-delete.js    Deletion confirmation modal and request
       task-notice.js    Shared timed notifications
       task-render.js    Safe task card creation
       task-validation.js Client-side task validation

@@ -6,7 +6,7 @@ require_once __DIR__ . '/../../app/tasks.php';
 require_once __DIR__ . '/../../app/task-validation.php';
 
 if (!isLoggedIn()) {
-    jsonResponse(['message' => 'Please log in again to save tasks.'], 401);
+    jsonResponse(['message' => 'Please log in again to manage tasks.'], 401);
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -33,8 +33,25 @@ if ($submittedId !== '') {
 
 $action = $_POST['action'] ?? 'save';
 
-if (!in_array($action, ['save', 'status'], true)) {
+if (!in_array($action, ['save', 'status', 'delete'], true)) {
     jsonResponse(['message' => 'Invalid task action.'], 400);
+}
+
+if ($action === 'delete') {
+    if ($taskId === null) {
+        jsonResponse(['message' => 'A task ID is required.'], 400);
+    }
+
+    try {
+        if (!deleteTask((int) $_SESSION['user_id'], $taskId)) {
+            jsonResponse(['message' => 'Task not found or no longer available.'], 404);
+        }
+
+        jsonResponse(['message' => 'Task deleted.', 'task_id' => $taskId]);
+    } catch (RuntimeException $exception) {
+        error_log('Delete task database error: ' . $exception->getMessage());
+        jsonResponse(['message' => 'Unable to delete your task right now. Please try again later.'], 503);
+    }
 }
 
 if ($action === 'status') {

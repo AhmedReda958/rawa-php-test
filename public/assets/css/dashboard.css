@@ -94,6 +94,7 @@
 }
 
 .task-item {
+    position: relative;
     display: flex;
     align-items: stretch;
     justify-content: space-between;
@@ -109,6 +110,7 @@
 }
 
 .task-heading {
+    padding-right: var(--space-24);
     display: flex;
     align-items: center;
     gap: var(--space-8);
@@ -148,6 +150,7 @@
 }
 
 .task-actions {
+    padding-top: var(--space-24);
     display: flex;
     flex-direction: column;
     align-items: flex-end;
@@ -156,34 +159,73 @@
     flex-shrink: 0;
 }
 
-.edit-task {
+.task-menu {
+    position: absolute;
+    top: var(--space-6);
+    right: var(--space-8);
+    flex-shrink: 0;
+}
+
+.task-menu-toggle {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    min-height: var(--space-32);
-    width: var(--space-32);
+    min-height: var(--space-24);
+    width: var(--space-24);
     padding: 0;
-    border: 0;
-    background: transparent;
+    height: var(--space-24);
+    border-radius: var(--radius-sm);
     color: var(--color-text-muted);
+    list-style: none;
+    font-size: 1.25rem;
+    cursor: pointer;
 }
 
-.edit-task:hover {
-    background: transparent;
+.task-menu-toggle::-webkit-details-marker {
+    display: none;
+}
+
+.task-menu-toggle:hover {
+    background-color: var(--color-neutral-soft);
     color: var(--color-primary);
 }
 
-.edit-task svg {
-    display: block;
-    width: 20px;
-    height: 20px;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 1.8;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    pointer-events: none;
+.task-menu-toggle:focus-visible {
+    outline: var(--focus-ring);
+    outline-offset: 3px;
+}
+
+.task-menu-options {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 1;
+    display: grid;
+    min-width: 112px;
+    padding: var(--space-4);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-surface);
+}
+
+.task-menu-options button {
+    min-height: var(--space-32);
+    padding: var(--space-8) var(--space-12);
+    border: 0;
+    background: transparent;
+    color: var(--color-text);
+    text-align: left;
+    font-weight: 400;
+    font-size: 0.8125rem;
+}
+
+.task-menu-options button:hover {
+    background-color: var(--color-neutral-soft);
+}
+
+.task-menu-options .delete-task {
+    color: var(--color-danger);
 }
 
 .change-status {
@@ -224,6 +266,7 @@
     }
 
     .task-actions {
+        padding-top: 0;
         flex-direction: row;
         align-items: center;
     }

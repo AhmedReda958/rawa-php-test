@@ -2,6 +2,7 @@ import { compareTasks, matchesTask } from './task-utils.js';
 import { initTaskForm } from './task-form.js';
 import { createTaskElement } from './task-render.js';
 import { initTaskStatus } from './task-status.js';
+import { initTaskMenu } from './task-menu.js';
 
 const taskDashboard = document.querySelector('#task-dashboard');
 
@@ -69,7 +70,7 @@ if (taskDashboard && document.querySelector('#task-list')) {
 
     document.querySelector('.task-stats').hidden = false;
     document.querySelector('.task-toolbar').hidden = false;
-    function saveTask(task, focusSelector = '.edit-task') {
+    function saveTask(task, focusSelector = '.task-menu-toggle') {
         const item = createTaskElement(task);
         const index = tasks.findIndex(existing => existing.dataset.id === String(task.id));
 
@@ -85,7 +86,7 @@ if (taskDashboard && document.querySelector('#task-list')) {
         if (index !== -1 && !document.querySelector('#task-dialog').open) {
             const focusTarget = item.hidden
                 ? document.querySelector('#open-task-form')
-                : item.querySelector(focusSelector) || item.querySelector('.edit-task');
+                : item.querySelector(focusSelector) || item.querySelector('.task-menu-toggle');
             focusTarget.focus();
         }
 
@@ -95,20 +96,22 @@ if (taskDashboard && document.querySelector('#task-list')) {
     const taskForm = initTaskForm(document.querySelector('#task-form'), saveTask);
     initTaskStatus(taskList, task => saveTask(task, '.change-status'));
 
-    taskList.addEventListener('click', (event) => {
-        const edit = event.target.closest('.edit-task');
-        if (!edit) return;
-
-        const task = edit.closest('.task-item').dataset;
+    initTaskMenu(taskList, (item) => {
+        const task = item.dataset;
         taskForm.edit({
             id: task.id, title: task.title, description: task.description,
             priority: task.priority, status: task.status, due_date: task.due,
         });
+    }, (id) => {
+        const index = tasks.findIndex(task => task.dataset.id === id);
+        if (index === -1) return;
+        tasks[index].remove();
+        tasks.splice(index, 1);
+        updateTasks();
+        const focusTarget = taskList.querySelector('.task-item:not([hidden]) .task-menu-toggle')
+            || document.querySelector('#open-task-form');
+        focusTarget.focus();
     });
-
-    for (const button of taskList.querySelectorAll('.edit-task')) {
-        button.hidden = false;
-    }
 
     updateTasks();
 }
